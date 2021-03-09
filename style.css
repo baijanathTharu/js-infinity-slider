@@ -27,6 +27,14 @@ li.item {
   box-shadow: 0 2px 5px #aaaa;
 }
 
+li.item:nth-child(even) {
+  background: wheat;
+}
+
+li.item:nth-child(odd) {
+  background: tomato;
+}
+
 /* infinity slider */
 .infinity-slider {
   position: relative;

@@ -38,10 +38,7 @@ function InfinitySlider(sliderId, multiplier) {
       slide.classList.add('infinity-slide');
       slide.setAttribute('data-pos', index);
       slide.style.left = `${this.setSlideAlignment(slide)}px`;
-      slide.classList.remove('infinity-active');
-      if (index + 1 === this.middleSlidePosition) {
-        slide.classList.add('infinity-active');
-      }
+      this.addInfinitActiveClass(slide);
     });
   };
 
@@ -91,18 +88,18 @@ function InfinitySlider(sliderId, multiplier) {
   this.setSlidePosition = (slide, direction) => {
     if (direction === 'left') {
       /**
-       * 0 => 7
+       * 0 => 6
        */
       return this.getSlidePosition(slide) - 1 < 0
-        ? this.numberOfSlides - this.getSlidePosition(slide)
+        ? this.numberOfSlides - this.getSlidePosition(slide) - 1
         : this.getSlidePosition(slide) - 1;
     }
     if (direction === 'right') {
       /**
-       * 7 => 0
+       * 6 => 0
        */
-      return this.getSlidePosition(slide) + 1 > this.numberOfSlides
-        ? this.numberOfSlides - this.getSlidePosition(slide)
+      return this.getSlidePosition(slide) + 1 >= this.numberOfSlides
+        ? this.numberOfSlides - this.getSlidePosition(slide) - 1
         : this.getSlidePosition(slide) + 1;
     }
   };
@@ -113,6 +110,19 @@ function InfinitySlider(sliderId, multiplier) {
     });
   };
 
+  /**
+   *
+   * @param {string} slide => add infinity-active to middle slide
+   */
+  this.addInfinitActiveClass = (slide) => {
+    console.log('s: ', this.getSlidePosition(slide));
+    if (this.getSlidePosition(slide) === this.middleSlidePosition) {
+      slide.classList.add('infinity-active');
+    } else {
+      slide.classList.remove('infinity-active');
+    }
+  };
+
   this.handleSlideClick = (e) => {
     const clickedSlide = e.target;
     const clickedSlidePosition = Number.parseInt(clickedSlide.dataset.pos);
@@ -121,6 +131,7 @@ function InfinitySlider(sliderId, multiplier) {
       this.slides.forEach((slide, index) => {
         slide.setAttribute('data-pos', this.setSlidePosition(slide, 'right'));
         slide.style.left = this.setSlideAlignment(slide) + 'px';
+        this.addInfinitActiveClass(slide);
       });
     } else if (clickedSlidePosition === this.middleSlidePosition) {
       // do nothing
@@ -129,6 +140,7 @@ function InfinitySlider(sliderId, multiplier) {
       this.slides.forEach((slide, index) => {
         slide.setAttribute('data-pos', this.setSlidePosition(slide, 'left'));
         slide.style.left = this.setSlideAlignment(slide) + 'px';
+        this.addInfinitActiveClass(slide);
       });
     }
   };
